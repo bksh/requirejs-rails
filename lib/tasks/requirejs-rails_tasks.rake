@@ -131,7 +131,8 @@ OS X Homebrew users can use 'brew install node'.
     # build config, to its Sprockets digestified name.
     task :digestify_and_compress => ["requirejs:setup"] do
       requirejs.config.build_config['modules'].each do |m|
-        asset_name = "#{requirejs.config.module_name_for(m)}.js"
+        asset_name = requirejs.config.module_name_for(m)
+        asset_name += '.js'  unless asset_name.match(/.css$/)
         built_asset_path = requirejs.config.target_dir + asset_name
         digest_name = asset_name.sub(/\.(\w+)$/) { |ext| "-#{requirejs.builder.digest_for(built_asset_path)}#{ext}" }
         digest_asset_path = requirejs.config.target_dir + digest_name

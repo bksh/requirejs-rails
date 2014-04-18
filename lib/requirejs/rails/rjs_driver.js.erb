@@ -22,7 +22,7 @@ function mix(target) {
 
 var module_specs = [
 <% build_config['modules'].each do |m| %>
-<%= JSON.pretty_generate(m.merge 'out' => module_path_for(m).to_s ) %>,
+<%= JSON.pretty_generate(module_specs_for(m)) %>,
 <% end %>
 ];
 

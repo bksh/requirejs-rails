@@ -107,9 +107,10 @@ module Requirejs::Rails
         when :almond
           mods = self[:build_config]['modules']
           mods.each do |mod|
-            name = mod['name']
-            mod['name'] = 'almond'
-            mod['include'] = name
+            if mod['name']
+              mod['include'] = mod['name']
+              mod['name'] = 'almond'
+            end
           end
         end
       end
@@ -132,6 +133,9 @@ module Requirejs::Rails
     end
 
     def module_name_for(mod)
+      if mod['cssIn']
+        return mod['cssIn']
+      end
       case self.loader
       when :almond
         return mod['include']
@@ -140,8 +144,15 @@ module Requirejs::Rails
       end
     end
 
-    def module_path_for(mod)
-      self.target_dir+(module_name_for(mod)+'.js')
+    def module_specs_for(mod)
+      mod.clone.tap do |m|
+        if m['name']
+          m['out'] = File.join(self.target_dir, module_name_for(m)+'.js')
+        elsif m['cssIn']
+          m['out'] = File.join(self.target_dir, m['cssIn'])
+          m['cssIn'] = File.join(self.source_dir, m['cssIn'])
+        end
+      end
     end
 
     def get_binding
