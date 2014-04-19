@@ -21,9 +21,9 @@ function mix(target) {
 }
 
 var module_specs = [
-<% build_config['modules'].each do |m| %>
-<%= JSON.pretty_generate(module_specs_for(m)) %>,
-<% end %>
+<%= build_config['modules'].collect { |m|
+  JSON.pretty_generate(module_specs_for(m))
+}.join(",\n") %>
 ];
 
 // Error handler invoked in case requirejs compilation fails
